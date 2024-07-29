@@ -20,7 +20,7 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install -g @bigcommerce/stencil-cli
-          yarn
+          npm install
       - name: Connect to store
         env:
               URL: ${{ secrets.STENCIL_STORE_URL }}
