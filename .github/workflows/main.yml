@@ -28,4 +28,4 @@ jobs:
         run: stencil init -u ${{ secrets.STENCIL_STORE_URL }} -t ${{ secrets.STENCIL_STORE_URL }} -p 3000 -h https://api.bigcommerce.com
       - name: Push Theme
         run: |
-          stencil push -a Light -d
+          stencil push
