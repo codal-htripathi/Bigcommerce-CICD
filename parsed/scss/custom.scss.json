@@ -1,0 +1,3 @@
+{
+  "custom.scss": ".get-cart-button button {\r\n    font-family: \"Roboto Condensed\";\r\n    text-transform: uppercase;\r\n    font-weight: bold;\r\n    font-size: 15px;\r\n    border-radius: 2px;\r\n}\r\narticle, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {\r\n    margin-top: 15px;\r\n}\n"
+}

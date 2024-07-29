@@ -1,0 +1,189 @@
+<link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css'/>
+
+<link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css'/>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js'></script>
+
+<script type='text/javascript' src='https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js'></script>
+<style>
+    .slick-dots{
+        bottom: 0 !important;
+    }
+</style>
+<script>
+  // Initialize the slick slider inside $(document).ready()
+  $(document).ready(function(){
+    $('#single-item').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      autoplay: true,
+      autoplaySpeed: 2000,
+      dots: true
+    });
+  });
+</script>
+
+        {{#partial "hero"}}
+            Hero partial
+        {{/partial}}
+{{#partial "page"}}
+
+<div class="container">
+    {{~inject 'demoData' demo.demo-key}}
+    {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
+        {{#partial "custom11"}}
+            Custom partial hello
+        {{/partial}}
+    <main class="page">
+        {{#unless theme_settings.hide_page_heading }}
+        <h1 class="page-heading">{{ page.title }}</h1>
+        {{/unless}}
+        
+        {{stylesheet "assets/scss/practice.scss" class="myStylesheet"}}
+        {{#if page.sub_pages}}
+        <nav class="navBar navBar--sub">
+            <ul class="navBar-section account-navigation">
+            {{#each page.sub_pages}}
+                <li class="navBar-item"><a class="navBar-action" href="{{url}}">{{title}}</a></li>
+            {{/each}}
+            </ul>
+        </nav>
+        {{/if}}
+        
+        {{{region name="page_builder_content"}}}
+    
+        <div class="page-content">
+            {{#replace '%%Syndicate%%' page.content}}
+                {{> components/page/rss_feed}}
+            {{else}}
+                {{{page.content}}}
+            {{/replace}}
+        </div>
+       <!---Practice Starts Here--->
+       <div id='single-item'>
+        <div><img src='https://wowslider.com/sliders/demo-18/data1/images/hongkong1081704.jpg' width="1000" height="700"></div>
+        <div><img src='https://lh6.googleusercontent.com/proxy/_VI03Y4GTvvUKdkg6s--wZbJFCWlNqKpuGK8SvTu-Wqaxkc9v-68AGtJWKD6OsM0T73lrtMVr2JecQdTyAWsPW1K50b3KgftZg' width="1000" height="700"></div>
+        <div><img src='https://wowslider.com/sliders/demo-18/data1/images/shanghai.jpg' width="1000" height="700"></div>
+        <div><img src='https://wowslider.com/sliders/demo-18/data1/images/new_york.jpg' width="1000" height="700"></div>
+        <div><img src='https://lh3.googleusercontent.com/proxy/F06tdAjuh9Z52gFCaAZGFd65fUUBJ7Zv5lN2eVVd13fWJbxVRQoj4yMSktYTkoHE4vWBgnyWRiaix_kw7LcKlELImi5fqQseItWCN8Lq' width="1000" height="700"></div>
+      </div>
+                {{#partial "head"}}
+                    Demo Partial
+                {{/partial}}
+            <div class="parent" style="margin-left: 20px">
+                <div class="test">
+
+                    Hello from test.html !!jjjj
+                </div>
+                <img src="{{cdn 'webdav:Assets/3.jpg'}}" alt="Image" height="100px" width="100px">
+                {{limit var 10}}
+                <br>
+                {{moment "1 hour ago" "MM/DD/YYYY HH:mm"}}
+                <br>
+                {{moment "1 hour ago" "YYYY/DD/MM HH:mm:ss"}}
+                <br>
+                {{moment "January 1, 2022" format="YYYY-MM-DD"}}
+                <br>
+                {{moment (now) format="YYYY-MM-DD"}}
+                <br>
+                {{money 1000 2 ',' '.'}}
+                <br>
+                {{moment "2022-01-01" format="MM"}} <!-- Output: 01 -->
+                <br>
+                {{#if (isBefore "2022-01-01" "2022-02-01")}}
+                <!-- Do something -->
+                    If condition content !
+                {{/if}}
+                <br>
+                <!-- {{moment (add "January 1, 2022" 1 "days") format="YYYY-MM-DD"}} Output: 2022-01-02 -->
+                <!--{{moment (sub "January 1, 2022" 1 "days") format="YYYY-MM-DD"}} Output: 2022-01-02 -->
+                <br>
+                {{assignVar "var" 10}}
+                {{getVar "var"}}
+                <br>
+                {{decrementVar "var"}}
+                {{nl2br var}}
+                {{incrementVar "var"}}
+                <br>
+                
+                {{assignVar "tr" 1}}
+                {{#if theme_settings.hide_page_heading}}
+                    If condition printed!
+                {{else}}
+                    Else condition printed !
+                {{/if}}
+                <br>
+                {{#unless theme_settings.hide_page_heading }}
+                    Unless condition printed !
+                {{/unless}}
+                <br>
+                {{#any theme_settings.hide_page_heading}}
+                    Any text printed !
+                {{/any}}<br>
+                {{#for 1 12}}
+                    {{lang (concat 'common.short_months.' $index)}}
+                {{/for}}
+                <br>
+                {{page_type}}
+                <br>
+                {{#if page_type '==' 'page' }}
+                    Condition is true
+                {{else}}
+                    Else Condition
+                {{/if}}
+                <br>
+                {{concat 'hello' 'world'}}
+                <br>
+                {{occurrences "foo bar foo bar baz" "foo"}}
+                <br>
+                {{stripQuerystring "http://example.com?tests=true"}}
+                <br>
+                {{setURLQueryParam "http://example.com/image.jpg" "c" "2"}}
+                <br>
+                {{strReplace "Buy one, get one half price. Limit one per customer." "one" "two"}}
+                <br>
+                {{strReplace "Buy one, get one half price. Limit one per customer." "one" "two" 100}}
+                <br>
+                {{toLowerCase 'I Love PIZZA'}}
+                <br>
+                {{truncate "This will be truncated to only the first part of the sentence." 22}}
+                <br>
+                {{#JSONparse '{"foo": "bar"}'}}
+                {{foo}}
+                {{/JSONparse}}
+                <br>
+                {{snakecase "a-b-c d_e"}}
+                <br>
+                <ul>
+                    {{#each items}}
+                      <li>{{this}}</li>
+                      {{afterArray}}
+                    {{/each}}
+                  </ul>
+                  {{length '["a", "b", "c"]'}}
+                  {{year}}
+                <br>
+                {{split "a,b,c" "--"}}
+                <br>
+                {{titleize "this is title case"}}
+                <br>
+                <p>Random number: {{random}}</p>
+                <br>
+                <hr>
+            </div>
+        <!-- Practice ends here-->
+        {{#if page.feed}}
+            <ul>
+                {{#each page.feed}}
+                    <li>
+                        <h6><a href="{{url}}" target="_blank">{{title}}</a></h6>
+                        <p>{{content}}</p>
+                    </li>
+                {{/each}}
+            </ul>
+        {{/if}}
+    </main>
+</div>
+
+{{/partial}}
+
+{{> layout/base}}

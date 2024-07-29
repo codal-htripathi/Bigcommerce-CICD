@@ -1,0 +1,121 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js">
+</script>
+{{#partial "head"}} {{{ checkout.checkout_head }}} {{{ stylesheet '/assets/css/optimized-checkout.css'
+}}} {{ getFontsCollection }}
+<script type="text/javascript">
+  window.language = {
+    {
+      langJson 'optimized_checkout'
+    }
+  };
+</script>
+{{{head.scripts}}} {{/partial}} {{#partial "page"}}
+<header class="checkoutHeader optimizedCheckout-header">
+  <div class="checkoutHeader-content">
+    <h1 class="is-srOnly">
+      {{lang 'checkout.title'}}
+    </h1>
+    <h2 class="checkoutHeader-heading">
+      <a class="checkoutHeader-link" href="{{urls.home}}">
+        {{#if checkout.header_image}}
+        <img alt="{{settings.store_logo.title}}" class="checkoutHeader-logo" id="logoImage"
+        src="{{ checkout.header_image }}" />
+        {{ else }}
+        <span class="header-logo-text">
+          {{settings.store_logo.title}}
+        </span>
+        {{/if}}
+      </a>
+    </h2>
+  </div>
+</header>
+Testing
+<script>
+  $(document).ready(function() {
+    const intervalId = setInterval(function() {
+      if ($(".remove-checkout-step-numbers").find('legend.form-legend:contains("Order Comments") span[class="c1"]').length > 0) {
+        clearInterval(intervalId);
+      } else {
+        $(".remove-checkout-step-numbers").find('legend.form-legend:contains("Order Comments")').append('<span class="c1" style="margin-left: 5px">AFTER</span>');
+        $(".remove-checkout-step-numbers .checkout-steps .checkout-step--shipping .checkout-view-content .checkout-form fieldset[data-test='checkout-shipping-comments']").append("<br><label for='gift-text' class='custom-gift-text form-legend optimizedCheckout-headingSecondary'>Add Gift Text</label> <input autocomplete='off' maxlength='2000' type='text' class='form-input optimizedCheckout-form-input' name='gift-text' id='gift-text' placeholder='Enter Gift text' value=''>");
+
+        $(document).on("keyup", '.remove-checkout-step-numbers .checkout-steps .checkout-step--shipping .checkout-view-content .checkout-form fieldset[data-test="checkout-shipping-comments"] #gift-text',
+        function() {
+          console.log("Working!");
+        });
+        $(".dynamic-form-field--field_28").hide();
+      }
+    },
+    100);
+
+    $(document).on("click", ".layout-main .checkout-steps .checkout-step--shipping .checkout-view-content .form-actions button",
+    function() {
+      var giftText = $("#gift-text").val();
+      if (giftText) {
+        console.log("Gift text:", giftText);
+        updateCheck(giftText);
+      }
+    });
+    let cartId;
+    const options = {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    };
+
+    fetch("https://harshit-tripathi.mybigcommerce.com/api/storefront/carts", options).then((response) = >response.json()).then((response) => {
+      console.log(response);
+      cartId = response[0].id;
+      console.log("CartId:", cartId);
+      demo(cartId);
+      updateCheck(cartId);
+    }).
+    catch((err) = >console.error(err));
+
+    function updateCheck(gift_message) {
+      jQuery.ajax({
+        url: "/api/storefront/checkouts/" + cartId,
+        method: "GET",
+        success: function(res) {
+          updatedata(res, gift_message);
+        },
+      });
+    }
+    function demo() {
+      console.log("!!", cartId);
+    }
+
+    function updatedata(res, gift_message) {
+      // Set the value of field_28Input with the entered gift message
+      for (let i = 0; i < res.consignments[0].address.customFields.length; i++) {
+        if (res.consignments[0].address.customFields[i].fieldId == "field_28") {
+          res.consignments[0].address.customFields[i].fieldValue = gift_message;
+        }
+      }
+      var responseData = {
+        address: res.consignments[0].address,
+        lineItems: [],
+        cart: res.cart.lineItems.physicalItems[0],
+      };
+      console.log("length of custom field " + res.consignments[0].address.customFields.length);
+      for (let i = 0; i < res.cart.lineItems.physicalItems.length; i++) {
+        var myobj = {
+          itemId: res.cart.lineItems.physicalItems[i].id,
+          quantity: res.cart.lineItems.physicalItems[i].quantity,
+        };
+        responseData.lineItems.push(myobj);
+        console.log("myobj:", myobj);
+      }
+      $.ajax({
+        url: "/api/storefront/checkouts/" + cartId + "/consignments/" + res.consignments[0].id,
+        method: "PUT",
+        contentType: "application/json",
+        data: JSON.stringify(responseData),
+      });
+    }
+  });
+</script>
+{{{ checkout.checkout_content }}} {{{ footer.scripts }}} {{/partial}}
+{{> layout/empty}}

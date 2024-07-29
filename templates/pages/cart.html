@@ -1,0 +1,150 @@
+---
+cart: true
+---
+{{inject 'cancelButtonText' (lang 'common.cancel')}}
+{{#partial "page"}}
+{{inject 'invalidEntryMessage' (lang 'cart.invalid_entry_message')}}
+<div class="page">
+    <div class="container">
+        <main class="page-content" data-cart>
+            {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
+
+            {{> components/cart/page-title}}
+
+            <div data-cart-status>
+                {{> components/cart/status-messages}}
+            </div>
+
+            {{#if cart.items.length}}
+            <div class="loadingOverlay"></div>
+
+            <div data-cart-content>
+                {{> components/cart/content}}
+            </div>
+
+            <div data-cart-totals>
+                {{> components/cart/totals}}
+            </div>
+
+            {{#if cart.show_primary_checkout_button}}
+            <div class="cart-actions">
+                <a class="button button--primary" href="{{urls.checkout.single_address}}"
+                    title="{{lang 'cart.checkout.title'}}">{{lang 'cart.checkout.button'}}</a>
+                {{#if cart.show_multiple_address_shipping}}
+                <a class="checkoutMultiple" href="{{urls.checkout.multiple_address}}">
+                    {{lang 'cart.preview.checkout_multiple'}}
+                </a>
+                {{/if}}
+            </div>
+            {{else}}
+            <div class="cart-actions">
+                <a class="button" href="{{urls.home}}" title="{{lang 'cart.continue_shopping'}}">{{lang
+                    'cart.continue_shopping'}}</a>
+            </div>
+            {{/if}}
+            
+            <div class="get-cart-button"><button type="text" class="get-button button button--primary">Get Cart Info
+                    Button</button></div>
+            <div class="add-cart-button"><button type="text" class="add-button button button--primary">Add 2 Apple Watch
+                    Product
+                    into
+                    Cart</button></div>
+            <div class="gift-cart-button"><button type="text" class="gift-button button button--primary">Add Gift
+                    Wraping</button></div>
+            <div class="update-cart-button"><button type="text" class="update-button button button--primary">Update
+                    Cart</button></div>
+            <div class="delete-cart-button"><button type="text" class="delete-button button button--primary">Delete Line Item in
+                    Cart</button></div>
+            {{#for start end}}
+                <h1>Product Title:</h1>
+            {{/for}}
+
+            {{#each products}}
+                <h1>Product Title: {{this}}</h1>
+            {{/each}}
+
+            
+            </div>
+            {{#if cart.additional_checkout_buttons}}
+            <div class="cart-additionalCheckoutButtons">
+                {{#each cart.additional_checkout_buttons}}
+                {{{this}}}
+                {{/each}}
+            </div>
+            {{/if}}
+            {{else}}
+            <h3>{{lang 'cart.checkout.empty_cart'}}</h3>
+            {{/if}}
+        </main>
+    </div>
+</div>
+{{/partial}}
+{{> layout/base}}
+<script>
+    $(document).ready(function () {
+
+        $(document).on('click', '.get-cart-button button', function () {
+            const options = {
+                method: 'GET',
+                headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
+            };
+
+            fetch('https://harshit-tripathi.mybigcommerce.com/api/storefront/carts', options)
+                .then(response => response.json())
+                .then(response => console.log(response))
+                .catch(err => console.error(err));
+        });
+
+        $(document).on('click', '.add-cart-button button', function () {
+            const options = {
+                method: 'POST',
+                headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+                body: '{"lineItems":[{"quantity":2,"productId":117,"variantId":110,"optionSelections":[{"optionId":125,"optionValue":124},{"optionId":126,"optionValue":129}]}]}'
+            };
+
+            fetch('https://harshit-tripathi.mybigcommerce.com/api/storefront/carts/19876e2f-ebb3-4819-a1bb-8d988131efd0/items', options)
+                .then(response => response.json())
+                .then(response => console.log(response))
+                .catch(err => console.error(err));
+        });
+
+        $(document).on('click', '.gift-cart-button button', function () {
+            const options = {
+                method: 'POST',
+                headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+                body: '{"lineItems":[{"quantity":2,"productId":117,"variantId":110,"giftWrapping":{"wrapTogether":true,"wrapDetails":[{"id":2,"message":"Happy Birthday"}]}}]}'
+            };
+
+            fetch('https://harshit-tripathi.mybigcommerce.com/api/storefront/carts/19876e2f-ebb3-4819-a1bb-8d988131efd0/items', options)
+                .then(response => response.json())
+                .then(response => console.log(response))
+                .catch(err => console.error(err));
+        });
+
+        $(document).on('click', '.update-cart-button button', function () {
+            const options = {
+                method: 'PUT',
+                headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+                body: '{"lineItem":{"productId":117,"variantId":110,"quantity":10},"locale":"en"}'
+            };
+
+            fetch('https://harshit-tripathi.mybigcommerce.com/api/storefront/carts/19876e2f-ebb3-4819-a1bb-8d988131efd0/items/f4084422-8a46-4033-b342-d0396b4a3517', options)
+                .then(response => response.json())
+                .then(response => console.log(response))
+                .catch(err => console.error(err));
+        });
+
+        $(document).on('click', '.delete-cart-button button', function () {
+            const options = {
+                method: 'DELETE',
+                headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
+            };
+
+            fetch('https://harshit-tripathi.mybigcommerce.com/api/storefront/carts/19876e2f-ebb3-4819-a1bb-8d988131efd0/items/05e5e308-fd86-4d28-af9e-682e427a1163', options)
+                .then(response => response.json())
+                .then(response => console.log(response))
+                .catch(err => console.error(err));
+        });
+    });
+</script>
+

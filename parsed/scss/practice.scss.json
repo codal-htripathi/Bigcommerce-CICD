@@ -1,0 +1,3 @@
+{
+  "practice.scss": ".test {\r\n    font-size: 2rem;\r\n    text-align: center;\r\n    color: yellow;\r\n}\n"
+}
