@@ -1,18 +1,33 @@
-name: Push Stencil Theme To BigCommerce.
+# This workflow is triggered on pushes to the Main Branch only.
 on:
-    push:
-      branches:
-        - main
-        jobs:
-            build:
-              name: Stencil Push
-              runs-on: ubuntu-latest
-              steps:
-                - name: Checkout Repository
-                  uses: actions/checkout@v1
-                  with:
-                    node-version: 14
-                - name: Install Dependencies
-                  run: |
-                    npm install -g @bigcommerce/stencil-cli
-                    yarn
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Stencil Push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v1
+
+      - name: Set Node version to 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+
+      - name: Install Dependencies
+        run: |
+          npm install -g @bigcommerce/stencil-cli
+          yarn
+
+      - name: Connect to store
+        env:
+              URL: ${{ secrets.STENCIL_STORE_URL }}
+              TOKEN: ${{ secrets.STENCIL_ACCESS_TOKEN }}
+            run: stencil init -u $URL -t $TOKEN -p 3000 -h https://api.bigcommerce.com
+
+      - name: Push Theme
+        run: |
+          stencil push -a Light -d
