@@ -34,7 +34,7 @@ jobs:
             headers: { \
               Accept: 'application/json', \
               'Content-Type': 'application/json', \
-              'X-Auth-Token': process.env.AUTH_TOKEN \
+              'X-Auth-Token': ${{ secrets.AUTH_TOKEN }} \
             }, \
             body: JSON.stringify({ \
               name: 'Bootstrap', \
