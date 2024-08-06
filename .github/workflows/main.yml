@@ -39,6 +39,6 @@ jobs:
       - name: Add Script in Script Manager
         env:
           STORE_HASH: ${{ secrets.STORE_HASH }}
-          ACCESS_TOKEN: ${{ secrets.STENCIL_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.STENCIL_ACCESS_TOKEN }}
         run: |
           node fileFetch.js
