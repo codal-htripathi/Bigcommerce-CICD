@@ -1,5 +1,5 @@
 const STORE_HASH = process.env.STORE_HASH;
-const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
+const ACCESS_TOKEN = process.env.STENCIL_ACCESS_TOKEN;
 
 const fetch = require('node-fetch');
 const optionsHtml = require('./scripts/create_script/options.json');
