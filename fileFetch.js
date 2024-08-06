@@ -5,17 +5,7 @@ const fetch = require('node-fetch');
 const STORE_HASH = process.env.STORE_HASH;
 const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
 
-// Load options.json
-const optionsJsonPath = path.join(__dirname, 'scripts', 'create_script', 'options.json');
-const optionsJson = JSON.parse(fs.readFileSync(optionsJsonPath, 'utf8'));
-
-// Load content.html
-const contentHtmlPath = path.join(__dirname, 'scripts', 'create_script', 'content.html');
-const contentHtml = fs.readFileSync(contentHtmlPath, 'utf8');
-
-// Replace the html field with the actual HTML content
-optionsJson.html = contentHtml;
-
+const scriptsDir = path.join(__dirname, 'scripts');
 const url = `https://api.bigcommerce.com/stores/${STORE_HASH}/v3/content/scripts`;
 const headers = {
   Accept: 'application/json',
@@ -54,9 +44,17 @@ async function createScript(scriptData) {
   return response.json();
 }
 
-// Main function to handle script creation or update
-(async () => {
-  try {
+// Function to process each script folder
+async function processScriptFolder(folder) {
+  const optionsJsonPath = path.join(scriptsDir, folder, 'options.json');
+  const contentHtmlPath = path.join(scriptsDir, folder, 'content.html');
+
+  if (fs.existsSync(optionsJsonPath) && fs.existsSync(contentHtmlPath)) {
+    const optionsJson = JSON.parse(fs.readFileSync(optionsJsonPath, 'utf8'));
+    const contentHtml = fs.readFileSync(contentHtmlPath, 'utf8');
+
+    optionsJson.html = contentHtml;
+
     const scriptsResponse = await getScripts();
     const scripts = scriptsResponse.data;
     const existingScript = scripts.find(script => script.name === optionsJson.name);
@@ -69,6 +67,19 @@ async function createScript(scriptData) {
       console.log('Creating new script');
       const result = await createScript(optionsJson);
       console.log('Create result:', result);
+    }
+  } else {
+    console.error(`Missing options.json or content.html in ${folder}`);
+  }
+}
+
+// Main function to iterate over all script folders and process them
+(async () => {
+  try {
+    const scriptFolders = fs.readdirSync(scriptsDir).filter(file => fs.statSync(path.join(scriptsDir, file)).isDirectory());
+
+    for (const folder of scriptFolders) {
+      await processScriptFolder(folder);
     }
   } catch (err) {
     console.error('Error:', err);

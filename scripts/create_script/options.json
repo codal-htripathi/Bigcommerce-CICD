@@ -1,6 +1,6 @@
 {
-    "name": "Demo Name 1",
-    "description": "Demo description 1",
+    "name": "Demo Name 11",
+    "description": "Demo description 11",
     "html": "/content.html",
     "auto_uninstall": true,
     "load_method": "default",
