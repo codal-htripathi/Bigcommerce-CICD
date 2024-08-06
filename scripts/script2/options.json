@@ -1,11 +1,11 @@
 {
-    "name": "Demo Name 1",
-    "description": "Demo description 1",
+    "name": "Demo Name 2",
+    "description": "Demo description 2",
     "html": "/content.html",
     "auto_uninstall": true,
     "load_method": "default",
-    "location": "footer",
+    "location": "header",
     "visibility": "all_pages",
     "kind": "script_tag",
-    "consent_category": "analytics"
+    "consent_category": "essential"
 }

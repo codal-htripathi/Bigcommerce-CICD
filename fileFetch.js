@@ -16,19 +16,60 @@ const contentHtml = fs.readFileSync(contentHtmlPath, 'utf8');
 // Replace the html field with the actual HTML content
 optionsJson.html = contentHtml;
 
-let url = `https://api.bigcommerce.com/stores/${STORE_HASH}/v3/content/scripts`;
-
-let options = {
-  method: 'POST',
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    'X-Auth-Token': ACCESS_TOKEN
-  },
-  body: JSON.stringify(optionsJson)
+const url = `https://api.bigcommerce.com/stores/${STORE_HASH}/v3/content/scripts`;
+const headers = {
+  Accept: 'application/json',
+  'Content-Type': 'application/json',
+  'X-Auth-Token': ACCESS_TOKEN
 };
 
-fetch(url, options)
-  .then(res => res.json())
-  .then(json => console.log(json))
-  .catch(err => console.error('error:' + err));
+// Function to get existing scripts
+async function getScripts() {
+  const response = await fetch(url, { headers });
+  return response.json();
+}
+
+// Function to update a script by ID
+async function updateScript(scriptId, scriptData) {
+  const updateUrl = `${url}/${scriptId}`;
+  const options = {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify(scriptData)
+  };
+
+  const response = await fetch(updateUrl, options);
+  return response.json();
+}
+
+// Function to create a new script
+async function createScript(scriptData) {
+  const options = {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(scriptData)
+  };
+
+  const response = await fetch(url, options);
+  return response.json();
+}
+
+// Main function to handle script creation or update
+(async () => {
+  try {
+    const scripts = await getScripts();
+    const existingScript = scripts.data.find(script => script.name === optionsJson.name);
+
+    if (existingScript) {
+      console.log(`Updating script with ID: ${existingScript.id}`);
+      const result = await updateScript(existingScript.id, optionsJson);
+      console.log('Update result:', result);
+    } else {
+      console.log('Creating new script');
+      const result = await createScript(optionsJson);
+      console.log('Create result:', result);
+    }
+  } catch (err) {
+    console.error('Error:', err);
+  }
+})();

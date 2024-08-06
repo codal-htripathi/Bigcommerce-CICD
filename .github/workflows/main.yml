@@ -36,7 +36,7 @@ jobs:
         run: |
           npm install -g @bigcommerce/storefront-data-hooks
 
-      - name: Add Script in Script Manager
+      - name: Manage Script Manager
         env:
           STORE_HASH: ${{ secrets.STORE_HASH }}
           ACCESS_TOKEN: ${{ secrets.STENCIL_ACCESS_TOKEN }}
