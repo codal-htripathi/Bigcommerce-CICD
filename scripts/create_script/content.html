@@ -1,25 +1,4 @@
-const fetch = require('node-fetch'); \
-          let url = \`https://api.bigcommerce.com/stores/${{ secrets.STORE_HASH }}/v3/content/scripts\`; \
-          let options = { \
-            method: 'POST', \
-            headers: { \
-              Accept: 'application/json', \
-              'Content-Type': 'application/json', \
-              'X-Auth-Token': process.env.AUTH_TOKEN \
-            }, \
-            body: JSON.stringify({ \
-              name: 'Bootstrap', \
-              description: 'Build responsive websites', \
-              src: 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js', \
-              auto_uninstall: true, \
-              load_method: 'default', \
-              location: 'footer', \
-              visibility: 'all_pages', \
-              kind: 'src', \
-              consent_category: 'essential' \
-            }) \
-          }; \
-          fetch(url, options) \
-            .then(res => res.json()) \
-            .then(json => console.log(json)) \
-            .catch(err => console.error('error:' + err));"
+<script>
+  console.log('CICD Runnig in console...');
+  alert('CICD Runnig in Alert !');
+</script>
