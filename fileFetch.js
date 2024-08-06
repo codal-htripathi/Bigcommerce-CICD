@@ -29,9 +29,9 @@ async function getScripts() {
   return response.json();
 }
 
-// Function to update a script by ID
-async function updateScript(scriptId, scriptData) {
-  const updateUrl = `${url}/${scriptId}`;
+// Function to update a script by UUID
+async function updateScript(uuid, scriptData) {
+  const updateUrl = `${url}/${uuid}`;
   const options = {
     method: 'PUT',
     headers,
@@ -57,12 +57,13 @@ async function createScript(scriptData) {
 // Main function to handle script creation or update
 (async () => {
   try {
-    const scripts = await getScripts();
-    const existingScript = scripts.data.find(script => script.name === optionsJson.name);
+    const scriptsResponse = await getScripts();
+    const scripts = scriptsResponse.data;
+    const existingScript = scripts.find(script => script.name === optionsJson.name);
 
     if (existingScript) {
-      console.log(`Updating script with ID: ${existingScript.id}`);
-      const result = await updateScript(existingScript.id, optionsJson);
+      console.log(`Updating script with UUID: ${existingScript.uuid}`);
+      const result = await updateScript(existingScript.uuid, optionsJson);
       console.log('Update result:', result);
     } else {
       console.log('Creating new script');
