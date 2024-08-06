@@ -62,7 +62,5 @@ jobs:
             .then(res => res.json())
             .then(json => console.log(json))
             .catch(err => console.error('error:' + err));
-          EOF
-          node create_script.js
         env:
           BC_API_TOKEN: ${{ secrets.STENCIL_ACCESS_TOKEN }}
