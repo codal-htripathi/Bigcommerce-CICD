@@ -33,7 +33,6 @@ jobs:
 
       - name: Create New Script in BigCommerce Store
         run: |
-          cat << 'EOF' > create_script.js
           const fetch = require('node-fetch');
 
           let url = 'https://api.bigcommerce.com/stores/u3hrjyzyw3/v3/content/scripts';
@@ -46,9 +45,9 @@ jobs:
               'X-Auth-Token': process.env.BC_API_TOKEN
             },
             body: JSON.stringify({
-              name: "Bootstrap",
-              description: "Build responsive websites",
-              html: "",
+              name: "Demo Name",
+              description: "Demo Description",
+              html: "<script>alert("CICD Script working !")</script>",
               auto_uninstall: true,
               load_method: "default",
               location: "footer",
