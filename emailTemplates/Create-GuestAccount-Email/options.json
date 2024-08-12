@@ -14,5 +14,5 @@
           }
       }
     ],
-    "subject": "Weolcome to {{store.name}}"
+    "subject": "Welcome to {{store.name}}"
   }
