@@ -5,9 +5,9 @@
       {
         "locale": "en",
         "keys": {
-          "reset_password": "To change your customer account password at {name} please click this link or copy and paste it into your browser:"
+          "reset_password": "Harshit's To change your customer account password at {name} please click this link or copy and paste it into your browser:"
         }
       }
     ],
-    "subject": "Reset your password at {{store.name}}"
+    "subject": "Harshit's Reset your password at {{store.name}}"
 }
