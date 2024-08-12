@@ -9,7 +9,7 @@ let options = {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      'X-Auth-Token': 'xxxxxxxxxxxxxxxxx'
+      'X-Auth-Token': ACCESS_TOKEN
     },
     body: '{"type_id":"account_reset_password_email","body":"<!DOCTYPE html> <html lang=\"en\"> <head>     <meta charset=\"UTF-8\">     <title>Title</title> </head> <body> <p>     {{lang \"reset_password\" name=store.name}} </p> <br/> <br/> <a href=\"{{account.reset_password_link}}\">     {{account.reset_password_link}} </a>  </body> </html>","translations":[{"locale":"en","keys":{"reset_password":"Harshit Tripathi To change your customer account password at {{name}} please click this link or copy and paste it into your browser:"}}],"subject":"Harshit Tripathi Reset your password at {{store.name}}"}'
   };
