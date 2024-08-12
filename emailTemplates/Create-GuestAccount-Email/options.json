@@ -1,0 +1,18 @@
+{
+    "type_id": "createguestaccount_email",
+    "body": "/content.html",
+    "translations": [
+      {
+        "locale": "en",
+        "keys": {
+          "subject": "Welcome to Harshit's {{store}}",
+          "hello": "Hii Hello {name}",
+          "message": "Hii For your convenience, we've created you an account on {store} so you can check the status of your order and checkout quicker in the future.",
+          "instruction": "hii To login you will need to follow the link below to nominate your password:",
+          "help": "hii If you have any questions regarding your account, click 'Reply' in your email client and we'll be only too happy to help.",
+          "go_shopping": "hii Go shopping"
+          }
+      }
+    ],
+    "subject": "Weolcome to {{store.name}}"
+  }
