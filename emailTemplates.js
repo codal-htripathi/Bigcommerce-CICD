@@ -11,7 +11,19 @@ let options = {
     'Content-Type': 'application/json',
     'X-Auth-Token': ACCESS_TOKEN
   },
-  body: '{"type_id":"account_reset_password_email","body":"<!DOCTYPE html> <html lang=\"en\"> <head>     <meta charset=\"UTF-8\">     <title>Title</title> </head> <body> <p>     {{lang \"reset_password\" name=store.name}} </p> <br/> <br/> <a href=\"{{account.reset_password_link}}\">     {{account.reset_password_link}} </a>  </body> </html>","translations":[{"locale":"en","keys":{"reset_password":"To change your customer account password at {{name}} please click this link or copy and paste it into your browser:"}}],"subject":"Reset your password at {{store.name}}"}'
+  body: JSON.stringify({
+    type_id: "account_reset_password_email",
+    body: "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><title>Title</title></head><body><p>{{lang \"reset_password\" name=store.name}}</p><br/><br/><a href=\"{{account.reset_password_link}}\">{{account.reset_password_link}}</a></body></html>",
+    translations: [
+      {
+        locale: "en",
+        keys: {
+          reset_password: "To change your customer account password at {{name}} please click this link or copy and paste it into your browser:"
+        }
+      }
+    ],
+    subject: "Hiiiiii Reset your password at {{store.name}}" // Ensure this is correct or try with a plain string like "Reset your password"
+  })
 };
 
 fetch(url, options)
