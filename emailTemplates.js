@@ -6,7 +6,7 @@ const STORE_HASH = process.env.STORE_HASH;
 const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
 
 // Path to the content.html file
-const contentFilePath = path.join(__dirname, 'emailTemplates/Passoword-Reset', 'content.html');
+const contentFilePath = path.join(__dirname, 'emailTemplates/Password-Reset', 'content.html');
 
 // Read the content of the content.html file
 fs.readFile(contentFilePath, 'utf8', (err, content) => {
