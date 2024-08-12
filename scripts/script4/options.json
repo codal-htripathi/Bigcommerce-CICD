@@ -1,0 +1,11 @@
+{
+    "name": "Demo Name 4",
+    "description": "Demo description 4",
+    "html": "/content.html",
+    "auto_uninstall": true,
+    "load_method": "default",
+    "location": "footer",
+    "visibility": "all_pages",
+    "kind": "script_tag",
+    "consent_category": "functional"
+}
