@@ -4,8 +4,8 @@
     "html": "/content.html",
     "auto_uninstall": true,
     "load_method": "default",
-    "location": "head",
+    "location": "footer",
     "visibility": "all_pages",
     "kind": "script_tag",
-    "consent_category": "essential"
+    "consent_category": "functional"
 }

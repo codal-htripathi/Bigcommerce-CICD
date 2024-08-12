@@ -7,5 +7,5 @@
     "location": "footer",
     "visibility": "all_pages",
     "kind": "script_tag",
-    "consent_category": "analytics"
+    "consent_category": "functional"
 }
