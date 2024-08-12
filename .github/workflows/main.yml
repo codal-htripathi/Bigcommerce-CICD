@@ -41,4 +41,4 @@ jobs:
           STORE_HASH: ${{ secrets.STORE_HASH }}
           ACCESS_TOKEN: ${{ secrets.STENCIL_ACCESS_TOKEN }}
         run: |
-          node fileFetch.js
+          node scriptsManager.js
