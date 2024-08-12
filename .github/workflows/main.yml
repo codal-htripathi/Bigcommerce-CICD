@@ -42,3 +42,4 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.STENCIL_ACCESS_TOKEN }}
         run: |
           node scriptsManager.js
+          node emailTemplates.js
