@@ -5,7 +5,6 @@
       {
         "locale": "en",
         "keys": {
-          "subject": "Welcome to Harshit's {{store}}",
           "hello": "Hello {name}",
           "message": "For your convenience, we've created you an account on {store} so you can check the status of your order and checkout quicker in the future.",
           "instruction": "To login you will need to follow the link below to nominate your password:",
