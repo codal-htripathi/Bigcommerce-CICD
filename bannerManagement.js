@@ -16,6 +16,9 @@ const headers = {
 // Function to get existing banners
 async function getBanners() {
   const response = await fetch(url, { headers });
+  if (!response.ok) {
+    throw new Error(`Error fetching banners: ${response.statusText}`);
+  }
   return response.json();
 }
 
@@ -29,11 +32,19 @@ async function updateBanner(id, bannerData) {
   };
 
   const response = await fetch(updateUrl, options);
+  if (!response.ok) {
+    const errorDetails = await response.json();
+    console.error('Error details:', errorDetails);
+    throw new Error(`Error updating banner: ${response.statusText}`);
+  }
   return response.json();
 }
 
 // Function to create a new banner
 async function createBanner(bannerData) {
+  // Remove the id field if it exists
+  delete bannerData.id;
+
   const options = {
     method: 'POST',
     headers,
@@ -41,6 +52,11 @@ async function createBanner(bannerData) {
   };
 
   const response = await fetch(url, options);
+  if (!response.ok) {
+    const errorDetails = await response.json();
+    console.error('Error details:', errorDetails);
+    throw new Error(`Error creating banner: ${response.statusText}`);
+  }
   return response.json();
 }
 
@@ -53,20 +69,21 @@ async function processBannerFolder(folder) {
     const optionsJson = JSON.parse(fs.readFileSync(optionsJsonPath, 'utf8'));
     const contentHtml = fs.readFileSync(contentHtmlPath, 'utf8');
 
-    optionsJson.content = contentHtml;
+    for (let bannerData of optionsJson) {
+      bannerData.content = contentHtml;
 
-    const bannersResponse = await getBanners();
-    const banners = bannersResponse.data;
-    const existingBanner = banners.find(banner => banner.id === optionsJson.id);
+      const bannersResponse = await getBanners();
+      const existingBanner = bannersResponse.find(banner => banner.id === bannerData.id);
 
-    if (existingBanner) {
-      console.log(`Updating banner with ID: ${existingBanner.id}`);
-      const result = await updateBanner(existingBanner.id, optionsJson);
-      console.log('Update result:', result);
-    } else {
-      console.log('Creating new banner');
-      const result = await createBanner(optionsJson);
-      console.log('Create result:', result);
+      if (existingBanner) {
+        console.log(`Updating banner with ID: ${existingBanner.id}`);
+        const result = await updateBanner(existingBanner.id, bannerData);
+        console.log('Update result:', result);
+      } else {
+        console.log('Creating new banner');
+        const result = await createBanner(bannerData);
+        console.log('Create result:', result);
+      }
     }
   } else {
     console.error(`Missing options.json or content.html in ${folder}`);
