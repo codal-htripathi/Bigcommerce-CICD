@@ -42,6 +42,9 @@ async function updateBanner(id, bannerData) {
 
 // Function to create a new banner
 async function createBanner(bannerData) {
+  // Remove the id field if it exists
+  delete bannerData.id;
+
   const options = {
     method: 'POST',
     headers,
