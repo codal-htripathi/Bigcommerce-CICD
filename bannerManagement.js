@@ -69,11 +69,14 @@ async function processBannerFolder(folder) {
     const optionsJson = JSON.parse(fs.readFileSync(optionsJsonPath, 'utf8'));
     const contentHtml = fs.readFileSync(contentHtmlPath, 'utf8');
 
+    // Get existing banners once
+    const bannersResponse = await getBanners();
+
     for (let bannerData of optionsJson) {
       bannerData.content = contentHtml;
 
-      const bannersResponse = await getBanners();
-      const existingBanner = bannersResponse.find(banner => banner.id === bannerData.id);
+      // Try to find a matching banner by name
+      const existingBanner = bannersResponse.find(banner => banner.name === bannerData.name);
 
       if (existingBanner) {
         console.log(`Updating banner with ID: ${existingBanner.id}`);
