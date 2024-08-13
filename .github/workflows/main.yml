@@ -43,3 +43,4 @@ jobs:
         run: |
           node scriptsManager.js
           node emailTemplates.js
+          node bannerManagement.js
