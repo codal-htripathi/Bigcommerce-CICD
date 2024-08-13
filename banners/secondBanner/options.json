@@ -1,13 +1,14 @@
 [
-    {
-      "name": "Second Banner",
-      "content": "/content.html",
-      "page": "home_page",
-      "item_id": "0",
-      "location": "top",
-      "date_type": "always",
-      "date_from": "0",
-      "date_to": "0",
-      "visible": "1"
-    }
-  ]
+  {
+    "name": "Second Banner",
+    "content": "/content.html",
+    "page": "home_page",
+    "item_id": "0",
+    "location": "top",
+    "date_created": "2024-08-13T12:00:00Z",
+    "date_type": "always",
+    "date_from": "2024-08-13T00:00:00Z",  
+    "date_to": "2024-12-31T23:59:59Z",     
+    "visible": "1"
+  }
+]
