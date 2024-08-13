@@ -9,7 +9,8 @@
           "message": "For your convenience, we've created you an account on {store} so you can check the status of your order and checkout quicker in the future.",
           "instruction": "To login you will need to follow the link below to nominate your password:",
           "help": "If you have any questions regarding your account, click 'Reply' in your email client and we'll be only too happy to help.",
-          "go_shopping": "Go shopping"
+          "go_shopping": "Go shopping",
+          "demo": "this is a demo content"
           }
       }
     ],
