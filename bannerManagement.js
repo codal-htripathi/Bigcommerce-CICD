@@ -33,6 +33,8 @@ async function updateBanner(id, bannerData) {
 
   const response = await fetch(updateUrl, options);
   if (!response.ok) {
+    const errorDetails = await response.json();
+    console.error('Error details:', errorDetails);
     throw new Error(`Error updating banner: ${response.statusText}`);
   }
   return response.json();
@@ -48,6 +50,8 @@ async function createBanner(bannerData) {
 
   const response = await fetch(url, options);
   if (!response.ok) {
+    const errorDetails = await response.json();
+    console.error('Error details:', errorDetails);
     throw new Error(`Error creating banner: ${response.statusText}`);
   }
   return response.json();
@@ -62,7 +66,6 @@ async function processBannerFolder(folder) {
     const optionsJson = JSON.parse(fs.readFileSync(optionsJsonPath, 'utf8'));
     const contentHtml = fs.readFileSync(contentHtmlPath, 'utf8');
 
-    // Since optionsJson is an array, process each banner
     for (let bannerData of optionsJson) {
       bannerData.content = contentHtml;
 
