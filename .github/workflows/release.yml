@@ -1,64 +1,61 @@
-name: Create Release
-
-on:
+name: Releases
+on: 
   push:
     branches:
       - main
 
 jobs:
-  release:
-    name: Create Release
+  changelog:
     runs-on: ubuntu-latest
 
-    steps:
+    steps: 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Set up Git
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-
-      - name: Get current version
-        id: get_version
-        run: |
-          VERSION=$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | head -n 1 | sed 's/^v//')
-          if [ -z "$VERSION" ]; then
-            VERSION="0.0.0"
-          fi
-          echo "::set-output name=version::$VERSION"
-
-      - name: Increment version
-        id: increment_version
-        run: |
-          VERSION=${{ steps.get_version.outputs.version }}
-          IFS='.' read -r -a PARTS <<< "$VERSION"
-          PATCH=$((PARTS[2] + 1))
-          NEW_VERSION="${PARTS[0]}.${PARTS[1]}.$PATCH"
-          echo "::set-output name=new_version::$NEW_VERSION"
-
-      - name: Create new tag
-        id: create_tag
-        run: |
-          NEW_TAG="v${{ steps.increment_version.outputs.new_version }}"
-          echo "::set-output name=new_tag::$NEW_TAG"
-
-      - name: Push new tag to GitHub
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
-        run: |
-          NEW_TAG=${{ steps.create_tag.outputs.new_tag }}
-          git tag -a $NEW_TAG -m "Release $NEW_TAG"
-          git push https://$GH_PAT@github.com/${{ github.repository }} $NEW_TAG
-
-      - name: Create GitHub release
-        uses: actions/create-release@v1
+      - name: Generate Changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3.7.1
         with:
-          token: ${{ secrets.GH_PAT }}
-          tag_name: $NEW_TAG
-          release_name: Release $NEW_TAG
-          body: |
-            ## Changes in this release
-            - Describe your changes here.
-          draft: false
-          prerelease: false
+          github-token: ${{ secrets.CHANGELOG_RELEASE }}
+
+      - name: Determine Next Version
+        id: next_version
+        run: |
+          # Fetch tags from the repository
+          git fetch --tags
+          
+          # Get the latest tag
+          latest_tag=$(git describe --tags --abbrev=0)
+          
+          # If no tags are found, set the initial version
+          if [ -z "$latest_tag" ]; then
+            next_version="v0.0.1"
+          else
+            # Extract version numbers and increment the patch version
+            latest_version=${latest_tag#v}
+            IFS='.' read -r -a version_parts <<< "$latest_version"
+            major=${version_parts[0]}
+            minor=${version_parts[1]}
+            patch=${version_parts[2]}
+            next_patch=$((patch + 1))
+            next_version="v${major}.${minor}.${next_patch}"
+          fi
+
+          echo "Next version: $next_version"
+          echo "next_version=$next_version" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        env: 
+          GITHUB_TOKEN: ${{ secrets.CHANGELOG_RELEASE }}
+        with:
+          tag_name: ${{ env.next_version }}
+          release_name: ${{ env.next_version }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
+
+      - name: Push New Tag
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          git tag ${{ env.next_version }}
+          git push origin ${{ env.next_version }}
