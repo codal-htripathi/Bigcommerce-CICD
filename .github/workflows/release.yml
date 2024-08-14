@@ -56,10 +56,10 @@ jobs:
           release_name: ${{ env.next_version }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
 
-      - name: Debug Release Creation
+      - name: Debug Release Creation Output
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
-          echo "Tag name: ${{ env.next_version }}"
+          echo "Creating release with tag: ${{ env.next_version }}"
           echo "Changelog body: ${{ steps.changelog.outputs.clean_changelog }}"
 
       - name: Push New Tag
@@ -76,5 +76,7 @@ jobs:
       - name: Debug Tag Push
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
+          echo "Listing local tags:"
           git tag -l
+          echo "Listing remote tags:"
           git ls-remote --tags origin
