@@ -34,3 +34,12 @@ jobs:
           tag_name: ${{ steps.changelog.outputs.tag }}
           release_name: ${{ steps.changelog.outputs.tag }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
+
+      - name: Check for Release Creation Errors
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          if [ -z "${{ steps.changelog.outputs.tag }}" ]; then
+            echo "Error: Tag name is empty. Release was not created."
+            exit 1
+          fi
+          echo "Release created successfully with tag ${{ steps.changelog.outputs.tag }}"
