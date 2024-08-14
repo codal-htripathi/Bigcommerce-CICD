@@ -1,1 +1,80 @@
-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
+name: Releases
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Generate Changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3.7.1
+        with:
+          github-token: ${{ secrets.CHANGELOG_RELEASE }}
+
+      - name: Debug Changelog Output
+        if: always()
+        run: |
+          echo "Skipped: ${{ steps.changelog.outputs.skipped }}"
+          echo "Tag: ${{ steps.changelog.outputs.tag }}"
+          echo "Clean Changelog: ${{ steps.changelog.outputs.clean_changelog }}"
+
+      - name: Determine Next Version
+        id: next_version
+        run: |
+          # Fetch tags from the repository
+          git fetch --tags
+
+          # Get the latest tag
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+
+          # Extract version numbers and increment the patch version
+          latest_version=${latest_tag#v}
+          IFS='.' read -r -a version_parts <<< "$latest_version"
+          major=${version_parts[0]}
+          minor=${version_parts[1]}
+          patch=${version_parts[2]}
+          next_patch=$((patch + 1))
+          next_version="v${major}.${minor}.${next_patch}"
+
+          echo "Next version: $next_version"
+          echo "next_version=$next_version" >> $GITHUB_ENV
+
+      - name: Create Release
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.CHANGELOG_RELEASE }}
+        with:
+          tag_name: ${{ env.next_version }}
+          release_name: ${{ env.next_version }}
+          body: ${{ steps.changelog.outputs.clean_changelog }}
+
+      - name: Debug Release Creation
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          echo "Tag name: ${{ env.next_version }}"
+          echo "Changelog body: ${{ steps.changelog.outputs.clean_changelog }}"
+
+      - name: Push New Tag
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          # Configure git
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          # Create and push the new tag
+          git tag ${{ env.next_version }}
+          git push origin ${{ env.next_version }}
+
+      - name: Debug Tag Push
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          git tag -l
+          git ls-remote --tags origin
