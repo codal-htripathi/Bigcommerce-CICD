@@ -45,7 +45,7 @@ jobs:
 
       - name: Push new tag to GitHub
         env:
-          GH_PAT: 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
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           NEW_TAG=${{ steps.create_tag.outputs.new_tag }}
           git tag -a $NEW_TAG -m "Release $NEW_TAG"
@@ -54,7 +54,7 @@ jobs:
       - name: Create GitHub release
         uses: actions/create-release@v1
         with:
-          token: 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
+          token: ${{ secrets.GH_PAT }}
           tag_name: $NEW_TAG
           release_name: Release $NEW_TAG
           body: |
