@@ -18,6 +18,13 @@ jobs:
         with:
           github-token: ${{ secrets.CHANGELOG_RELEASE }}
 
+      - name: Debug Changelog Output
+        if: always()
+        run: |
+          echo "Skipped: ${{ steps.changelog.outputs.skipped }}"
+          echo "Tag: ${{ steps.changelog.outputs.tag }}"
+          echo "Clean Changelog: ${{ steps.changelog.outputs.clean_changelog }}"
+
       - name: Create Release
         uses: actions/create-release@v1
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
