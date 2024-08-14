@@ -41,14 +41,22 @@ jobs:
         id: create_tag
         run: |
           NEW_TAG="v${{ steps.increment_version.outputs.new_version }}"
+          echo "::set-output name=new_tag::$NEW_TAG"
+
+      - name: Push new tag to GitHub
+        env:
+          GH_PAT: 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
+        run: |
+          NEW_TAG=${{ steps.create_tag.outputs.new_tag }}
           git tag -a $NEW_TAG -m "Release $NEW_TAG"
-          git push origin $NEW_TAG
+          git push https://$GH_PAT@github.com/codal-htripathi/Bigcommerce-CICD-LocalToStoreDeploy-and-ScriptsManagement $NEW_TAG
 
       - name: Create GitHub release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ steps.create_tag.outputs.new_tag }}
-          release_name: Release ${{ steps.create_tag.outputs.new_tag }}
+          token: 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
+          tag_name: $NEW_TAG
+          release_name: Release $NEW_TAG
           body: |
             ## Changes in this release
             - Describe your changes here.
