@@ -2,8 +2,8 @@ name: Create Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
 
 jobs:
   build:
@@ -14,14 +14,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         
+      - name: Get version number
+        id: get_version
+        run: |
+          # Assuming you use a versioning file like version.txt
+          VERSION=$(cat version.txt)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: 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
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }}  # Use ref_name to get the tag name directly
-          release_name: Release ${{ github.ref_name }}
+          tag_name: ${{ env.VERSION }}  # Use VERSION from the previous step
+          release_name: Release ${{ env.VERSION }}
           body: |
             Changes in this Release
             - First Change
