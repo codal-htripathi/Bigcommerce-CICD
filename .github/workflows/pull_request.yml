@@ -28,3 +28,4 @@ jobs:
           pr_title: ${{ github.event.inputs.title }}               
           pr_label: ${{ github.event.inputs.version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          
