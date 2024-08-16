@@ -23,7 +23,7 @@ jobs:
       - name: pull-request
         uses: repo-sync/pull-request@v2
         with:
-          source_branch: "release"                                
+          source_branch: "demo-branch"                                
           destination_branch: "main"                               
           pr_title: ${{ github.event.inputs.title }}               
           pr_label: ${{ github.event.inputs.version }}
