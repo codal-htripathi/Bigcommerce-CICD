@@ -13,13 +13,35 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
-      - name: Get version number
-        id: get_version
+
+      - name: Get latest tag
+        id: get_latest_tag
         run: |
-          # Assuming you use a versioning file like version.txt
-          VERSION=$(cat version.txt)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          # Fetch all tags
+          git fetch --tags
+          # Get the latest tag
+          LATEST_TAG=$(git tag --list "v*" | sort -V | tail -n 1)
+          echo "LATEST_TAG=${LATEST_TAG}" >> $GITHUB_ENV
+
+      - name: Determine new version
+        id: determine_version
+        run: |
+          # Default to v2.0.1 if no tags exist
+          if [ -z "${LATEST_TAG}" ]; then
+            NEW_VERSION="v2.0.1"
+          else
+            # Increment the patch version
+            VERSION_PARTS=(${LATEST_TAG//./ })
+            PATCH_VERSION=${VERSION_PARTS[2]}
+            NEW_PATCH_VERSION=$((PATCH_VERSION + 1))
+            NEW_VERSION="v${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$NEW_PATCH_VERSION"
+          fi
+          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+
+      - name: Create new tag
+        run: |
+          git tag ${{ env.NEW_VERSION }}
+          git push origin ${{ env.NEW_VERSION }}
 
       - name: Create Release
         id: create_release
@@ -27,8 +49,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.VERSION }}  # Use VERSION from the previous step
-          release_name: Release ${{ env.VERSION }}
+          tag_name: ${{ env.NEW_VERSION }}
+          release_name: Release ${{ env.NEW_VERSION }}
           body: |
             Changes in this Release
             - First Change
