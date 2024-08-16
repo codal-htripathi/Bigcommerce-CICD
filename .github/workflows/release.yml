@@ -1,59 +1,59 @@
-name: Create Release
+# name: Create Release
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  build:
-    name: Create Release
-    runs-on: ubuntu-latest
+# jobs:
+#   build:
+#     name: Create Release
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Get latest tag
-        id: get_latest_tag
-        run: |
-          # Fetch all tags
-          git fetch --tags
-          # Get the latest tag
-          LATEST_TAG=$(git tag --list "v*" | sort -V | tail -n 1)
-          echo "LATEST_TAG=${LATEST_TAG}" >> $GITHUB_ENV
+#       - name: Get latest tag
+#         id: get_latest_tag
+#         run: |
+#           # Fetch all tags
+#           git fetch --tags
+#           # Get the latest tag
+#           LATEST_TAG=$(git tag --list "v*" | sort -V | tail -n 1)
+#           echo "LATEST_TAG=${LATEST_TAG}" >> $GITHUB_ENV
 
-      - name: Determine new version
-        id: determine_version
-        run: |
-          # Default to v2.0.1 if no tags exist
-          if [ -z "${LATEST_TAG}" ]; then
-            NEW_VERSION="v2.0.1"
-          else
-            # Increment the patch version
-            VERSION_PARTS=(${LATEST_TAG//./ })
-            PATCH_VERSION=${VERSION_PARTS[2]}
-            NEW_PATCH_VERSION=$((PATCH_VERSION + 1))
-            NEW_VERSION="v${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$NEW_PATCH_VERSION"
-          fi
-          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+#       - name: Determine new version
+#         id: determine_version
+#         run: |
+#           # Default to v2.0.1 if no tags exist
+#           if [ -z "${LATEST_TAG}" ]; then
+#             NEW_VERSION="v2.0.1"
+#           else
+#             # Increment the patch version
+#             VERSION_PARTS=(${LATEST_TAG//./ })
+#             PATCH_VERSION=${VERSION_PARTS[2]}
+#             NEW_PATCH_VERSION=$((PATCH_VERSION + 1))
+#             NEW_VERSION="v${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$NEW_PATCH_VERSION"
+#           fi
+#           echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
 
-      - name: Create new tag
-        run: |
-          git tag ${{ env.NEW_VERSION }}
-          git push origin ${{ env.NEW_VERSION }}
+#       - name: Create new tag
+#         run: |
+#           git tag ${{ env.NEW_VERSION }}
+#           git push origin ${{ env.NEW_VERSION }}
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.NEW_VERSION }}
-          release_name: Release ${{ env.NEW_VERSION }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-          draft: false
-          prerelease: false
+#       - name: Create Release
+#         id: create_release
+#         uses: actions/create-release@v1
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         with:
+#           tag_name: ${{ env.NEW_VERSION }}
+#           release_name: Release ${{ env.NEW_VERSION }}
+#           body: |
+#             Changes in this Release
+#             - First Change
+#             - Second Change
+#           draft: false
+#           prerelease: false
