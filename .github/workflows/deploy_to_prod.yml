@@ -219,7 +219,7 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           source_branch: main
-          target_branch: release
+          target_branch: demo-branch
           title: 'merging changes of US production back to US release branch'
           body: "**Automated pull request**"
           draft: false
