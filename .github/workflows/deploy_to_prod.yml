@@ -31,7 +31,7 @@ jobs:
 
       - name: get pull-request-label
         id: manual
-        uses: actions-ecosystem/action-get-merged-pull-request@v0.0.0
+        uses: actions-ecosystem/action-get-merged-pull-request@v1.0.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
