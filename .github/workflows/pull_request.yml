@@ -1,17 +1,16 @@
-name: Create a pull request on main branch
+name: Create a pull request on main branch.
 
 on:
   workflow_dispatch:
+    # Inputs the workflow accepts.
     inputs:
       title:
-        description: 'Title of the pull request'
         required: true
-        type: string
-      version:
+      version:   
         description: 'Enter release version label'
         required: true
         type: choice
-        options:
+        options: 
           - patch
           - minor
           - major
@@ -21,11 +20,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Create Pull Request
+      - name: pull-request
         uses: repo-sync/pull-request@v2
         with:
-          source_branch: "demo-branch"
-          destination_branch: "main"
-          pr_title: ${{ github.event.inputs.title }}
+          source_branch: "demo-branch"                                
+          destination_branch: "main"                               
+          pr_title: ${{ github.event.inputs.title }}               
           pr_label: ${{ github.event.inputs.version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          
