@@ -19,7 +19,7 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
-      - name: "Get the latest tag here"
+      - name: "Get the latest tag"
         id: tag
         run: |
           latest_tag=$(git describe --tags --abbrev=0 || echo "v0.0.0")
