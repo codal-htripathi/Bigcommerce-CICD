@@ -29,10 +29,14 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Save version type
-        run: echo "${{ github.event.inputs.version }}" > version_type.txt
+        run: echo "${{ github.event.inputs.version }}" > .github/version_type.txt
 
-      - name: Upload version type artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: version_type
-          path: version_type.txt
+      - name: Commit version type file
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add .github/version_type.txt
+          git commit -m "Add version type for release"
+
+      - name: Push changes
+        run: git push origin demo-branch

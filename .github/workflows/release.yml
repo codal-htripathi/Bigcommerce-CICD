@@ -14,16 +14,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Download version type artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: version_type
-          path: .
-
       - name: Read version type
         id: version_type
         run: |
-          version_type=$(cat version_type.txt)
+          version_type=$(cat .github/version_type.txt)
+          echo "Version type: $version_type"
           echo "::set-output name=version_type::$version_type"
 
       - name: Get the latest tag
