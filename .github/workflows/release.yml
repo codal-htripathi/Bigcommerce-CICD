@@ -49,9 +49,10 @@ jobs:
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "${{ steps.next_version.outputs.next_version }}"
           prerelease: false
-          tag_name: "${{ steps.next_version.outputs.next_version }}"
-          release_name: "Release ${{ steps.next_version.outputs.next_version }}"
+          draft: false
+          title: "Release ${{ steps.next_version.outputs.next_version }}"
           files: |
             LICENSE.txt
             *.jar
