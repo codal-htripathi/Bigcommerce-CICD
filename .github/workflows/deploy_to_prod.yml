@@ -15,7 +15,7 @@
         # ...
         - name: "Build & test"
           run: |
-            echo "done!"
+            echo "done release!"
   
         - uses: "marvinpinto/action-automatic-releases@latest"
           with:
