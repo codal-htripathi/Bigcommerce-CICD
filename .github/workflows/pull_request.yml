@@ -2,7 +2,6 @@ name: Create a pull request on main branch.
 
 on:
   workflow_dispatch:
-    # Inputs the workflow accepts.
     inputs:
       title:
         required: true
@@ -28,4 +27,12 @@ jobs:
           pr_title: ${{ github.event.inputs.title }}               
           pr_label: ${{ github.event.inputs.version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          
+
+      - name: Save version type
+        run: echo "${{ github.event.inputs.version }}" > version_type.txt
+
+      - name: Upload version type artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: version_type
+          path: version_type.txt
