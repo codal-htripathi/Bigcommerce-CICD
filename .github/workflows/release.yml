@@ -1,59 +1,57 @@
-# name: Create Release
+name: "tagged-release"
 
-# on:
-#   push:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
 
-# jobs:
-#   build:
-#     name: Create Release
-#     runs-on: ubuntu-latest
+jobs:
+  tagged-release:
+    name: "Tagged Release"
+    runs-on: "ubuntu-latest"
 
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v3
 
-#       - name: Get latest tag
-#         id: get_latest_tag
-#         run: |
-#           # Fetch all tags
-#           git fetch --tags
-#           # Get the latest tag
-#           LATEST_TAG=$(git tag --list "v*" | sort -V | tail -n 1)
-#           echo "LATEST_TAG=${LATEST_TAG}" >> $GITHUB_ENV
+      - name: "Set up Git"
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
 
-#       - name: Determine new version
-#         id: determine_version
-#         run: |
-#           # Default to v2.0.1 if no tags exist
-#           if [ -z "${LATEST_TAG}" ]; then
-#             NEW_VERSION="v2.0.1"
-#           else
-#             # Increment the patch version
-#             VERSION_PARTS=(${LATEST_TAG//./ })
-#             PATCH_VERSION=${VERSION_PARTS[2]}
-#             NEW_PATCH_VERSION=$((PATCH_VERSION + 1))
-#             NEW_VERSION="v${VERSION_PARTS[0]}.${VERSION_PARTS[1]}.$NEW_PATCH_VERSION"
-#           fi
-#           echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+      - name: "Get the latest tag"
+        id: tag
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0 || echo "v0.0.0")
+          echo "Latest tag: $latest_tag"
+          echo "::set-output name=latest_tag::$latest_tag"
 
-#       - name: Create new tag
-#         run: |
-#           git tag ${{ env.NEW_VERSION }}
-#           git push origin ${{ env.NEW_VERSION }}
+      - name: "Calculate next version"
+        id: next_version
+        run: |
+          latest_tag=${{ steps.tag.outputs.latest_tag }}
+          IFS='.' read -r -a parts <<< "${latest_tag/v/}"
+          next_patch=$((parts[2]+1))
+          next_version="v${parts[0]}.${parts[1]}.$next_patch"
+          echo "Next version: $next_version"
+          echo "::set-output name=next_version::$next_version"
 
-#       - name: Create Release
-#         id: create_release
-#         uses: actions/create-release@v1
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#         with:
-#           tag_name: ${{ env.NEW_VERSION }}
-#           release_name: Release ${{ env.NEW_VERSION }}
-#           body: |
-#             Changes in this Release
-#             - First Change
-#             - Second Change
-#           draft: false
-#           prerelease: false
+      - name: "Build & test"
+        run: |
+          echo "done!"
+
+      - name: "Create new tag"
+        run: |
+          git tag ${{ steps.next_version.outputs.next_version }}
+          git push origin ${{ steps.next_version.outputs.next_version }}
+
+      - name: "Create GitHub Release"
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          tag_name: "${{ steps.next_version.outputs.next_version }}"
+          release_name: "Release ${{ steps.next_version.outputs.next_version }}"
+          files: |
+            LICENSE.txt
+            *.jar
