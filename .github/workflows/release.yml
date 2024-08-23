@@ -35,7 +35,7 @@ jobs:
         run: |
           latest_tag=${{ steps.tag.outputs.latest_tag }}
           IFS='.' read -r -a parts <<< "${latest_tag/v/}"
-          version_type=$(git log -1 --pretty=%B | grep -oE 'patch|minor|major' || echo "patch")
+          version_type=${{ env.VERSION_TYPE }}
           
           if [ "$version_type" = "patch" ]; then
             next_patch=$((parts[2]+1))
