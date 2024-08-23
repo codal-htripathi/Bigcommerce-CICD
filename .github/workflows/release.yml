@@ -26,7 +26,7 @@ jobs:
       - name: "Get the latest tag"
         id: tag
         run: |
-          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` || echo "v0.0.0")
+          latest_tag=$(git describe --tags git rev-list --tags --max-count=1 || echo "v0.0.0")
           echo "Latest tag: $latest_tag"
           echo "::set-output name=latest_tag::$latest_tag"
 
@@ -35,7 +35,7 @@ jobs:
         run: |
           latest_tag=${{ steps.tag.outputs.latest_tag }}
           IFS='.' read -r -a parts <<< "${latest_tag/v/}"
-          version_type=${{ env.VERSION_TYPE }}
+          version_type=$(git log -1 --pretty=%B | grep -oE 'patch|minor|major' || echo "patch")
           
           if [ "$version_type" = "patch" ]; then
             next_patch=$((parts[2]+1))
