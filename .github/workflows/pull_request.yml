@@ -1,4 +1,4 @@
-name: Create a pull request on main branch.
+name: Create a pull request on the main branch.
 
 on:
   workflow_dispatch:
@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: pull-request
+      - name: Create pull request
         id: pr
         uses: repo-sync/pull-request@v2
         with:
@@ -29,6 +29,6 @@ jobs:
           pr_title: ${{ github.event.inputs.title }}               
           pr_label: ${{ github.event.inputs.version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-        
+
       - name: Set version type
-        run: echo "::set-output name=version_type::${{ github.event.inputs.version }}"
+        run: echo "VERSION_TYPE=${{ github.event.inputs.version }}" >> $GITHUB_ENV
