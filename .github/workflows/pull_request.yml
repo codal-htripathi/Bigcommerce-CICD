@@ -2,7 +2,6 @@ name: Create a pull request on main branch.
 
 on:
   workflow_dispatch:
-    # Inputs the workflow accepts.
     inputs:
       title:
         required: true
@@ -20,7 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: pull-request
+        id: pr
         uses: repo-sync/pull-request@v2
         with:
           source_branch: "demo-branch"                                
@@ -28,4 +29,6 @@ jobs:
           pr_title: ${{ github.event.inputs.title }}               
           pr_label: ${{ github.event.inputs.version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          
+        
+      - name: Set version type
+        run: echo "::set-output name=version_type::${{ github.event.inputs.version }}"
