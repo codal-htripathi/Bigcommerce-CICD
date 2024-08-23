@@ -5,11 +5,11 @@ on:
     inputs:
       title:
         required: true
-      version:   
+      version:
         description: 'Enter release version label'
         required: true
         type: choice
-        options: 
+        options:
           - patch
           - minor
           - major
@@ -24,11 +24,8 @@ jobs:
         id: pr
         uses: repo-sync/pull-request@v2
         with:
-          source_branch: "demo-branch"                                
-          destination_branch: "main"                               
-          pr_title: ${{ github.event.inputs.title }}               
+          source_branch: "demo-branch"
+          destination_branch: "main"
+          pr_title: ${{ github.event.inputs.title }} - ${{ github.event.inputs.version }}
           pr_label: ${{ github.event.inputs.version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-        
-      - name: Set version type
-        run: echo "::set-output name=version_type::${{ github.event.inputs.version }}"
