@@ -19,7 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: pull-request
+        id: pr
         uses: repo-sync/pull-request@v2
         with:
           source_branch: "demo-branch"                                
@@ -27,16 +29,6 @@ jobs:
           pr_title: ${{ github.event.inputs.title }}               
           pr_label: ${{ github.event.inputs.version }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Save version type
-        run: echo "${{ github.event.inputs.version }}" > .github/version_type.txt
-
-      - name: Commit version type file
-        run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add .github/version_type.txt
-          git commit -m "Add version type for release"
-
-      - name: Push changes
-        run: git push origin demo-branch
+        
+      - name: Set version type
+        run: echo "::set-output name=version_type::${{ github.event.inputs.version }}"
