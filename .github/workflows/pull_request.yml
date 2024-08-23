@@ -24,7 +24,7 @@ jobs:
         id: pr
         uses: repo-sync/pull-request@v2
         with:
-          source_branch: "demo-branch"
+          source_branch: "staging"
           destination_branch: "main"
           pr_title: ${{ github.event.inputs.title }} - ${{ github.event.inputs.version }}
           pr_label: ${{ github.event.inputs.version }}
