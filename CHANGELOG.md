@@ -1,6 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+
+
 ## 5.0.0 (2023-8-1)
 
 - Upgraded the theme to work with Node 18 
